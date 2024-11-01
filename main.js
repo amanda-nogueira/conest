@@ -18,6 +18,15 @@ function createWindow() {
     ipcMain.on('open-client', () => {      
         clientWindow()  
     })
+    ipcMain.on('open-supplier', () =>{
+        supplierWindow()
+    })
+    ipcMain.on('open-product', () => {
+        productWindow()
+    })
+    ipcMain.on('open-report', () => {
+        reportWindow()
+    })
 }
 
 function aboutWindow() {
@@ -66,6 +75,63 @@ function clientWindow() {
         })
     }
     client.loadFile('./src/views/clientes.html')
+}
+
+function supplierWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    let supplier
+    if (main) {
+        supplier = new BrowserWindow({
+            width: 800,
+            height: 600,
+            autoHideMenuBar: true,
+            parent: main,
+            modal: true,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
+        })
+    }
+    supplier.loadFile('./src/views/fornecedores.html')
+}
+
+function productWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    let product
+    if (main) {
+        product = new BrowserWindow({
+            width: 800,
+            height: 600,
+            autoHideMenuBar: true,
+            parent: main,
+            modal: true,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
+        })
+    }
+    product.loadFile('./src/views/produtos.html')
+}
+
+function reportWindow() {
+    nativeTheme.themeSource = 'light'
+    const main = BrowserWindow.getFocusedWindow()
+    let report
+    if (main) {
+        report = new BrowserWindow({
+            width: 800,
+            height: 600,
+            autoHideMenuBar: true,
+            parent: main,
+            modal: true,
+            webPreferences: {
+                preload: path.join(__dirname, 'preload.js')
+            }
+        })
+    }
+    report.loadFile('./src/views/relatorios.html')
 }
 
 app.whenReady().then(() => {
