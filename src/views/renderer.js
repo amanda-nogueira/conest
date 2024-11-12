@@ -1,19 +1,32 @@
-function fechar(){
+function fechar() {
     api.fecharJanela()
 }
 
-function clientes(){
+function clientes() {
     api.janelaClientes()
 }
 
-function fornecedores(){
+function fornecedores() {
     api.janelaFornecedores()
 }
 
-function produtos(){
+function produtos() {
     api.janelaProdutos()
 }
 
-function relatorios(){
+function relatorios() {
     api.janelaRelatorios()
 }
+
+//Inserção da data de rodapé
+function obterData() {
+    const data = new Date()
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    }
+    return data.toLocaleDateString('pt-BR', options)
+}
+document.getElementById('dataAtual').innerHTML = obterData()
