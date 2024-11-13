@@ -14,7 +14,6 @@ const dbConnect = async () =>{
     if (isConnected === true) {
         await conectar()
     }
-
 }
 
 //Conectar
