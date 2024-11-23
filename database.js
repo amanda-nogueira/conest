@@ -4,14 +4,14 @@
 
 const mongoose = require('mongoose')
 
-//Definir a URL e a autenticação do banco de dados
-const url = 'mongodb+srv://admin:123senac@clusterconest.pjvfq.mongodb.net/'
+//Definir a URL e a autenticação do banco de dados (acrescentar ao final da url um nome para o banco de dados)
+const url = 'mongodb+srv://admin:123senac@clusterconest.pjvfq.mongodb.net/dbconest'
 
 //Status de conexão (ícone de conexão)
 let isConnected = false
 
 const dbConnect = async () =>{
-    if (isConnected === true) {
+    if (isConnected === false) {
         await conectar()
     }
 }
@@ -44,3 +44,5 @@ const desconectar = async () => {
         }
     }
 }
+
+module.exports = {dbConnect, desconectar}

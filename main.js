@@ -1,4 +1,4 @@
-const { app, BrowserWindow, nativeTheme, Menu, shell, ipcMain } = require('electron/main')
+const { app, BrowserWindow, nativeTheme, Menu, shell, ipcMain, dialog} = require('electron/main')
 const path = require('node:path')
 
 
@@ -11,6 +11,8 @@ e usá-la quando necessário. Fechar e reabrir constantemente a conexão aumenta
 //A variável abaixo é usada para garantir que o banco de dados inicie desconectado (evitar abrir outra instância)
 let dbcon = null
 
+//Importação do Schema Clientes da camada model
+const clienteModel = require('./src/models/Clientes.js')
 
 let win //Janela principal
 function createWindow() {
@@ -22,7 +24,7 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+    //Menu.setApplicationMenu(Menu.buildFromTemplate(template)) //Menu personalizado (comentar para debugar)
     win.loadFile('./src/views/index.html')
 
     //Botões
@@ -77,7 +79,7 @@ function clientWindow() {
         client = new BrowserWindow({
             width: 800,
             height: 600,
-            autoHideMenuBar: true,
+            //autoHideMenuBar: true,
             parent: main,
             modal: true,
             webPreferences: {
@@ -153,8 +155,12 @@ app.whenReady().then(() => {
     ipcMain.on('db-connect', async(event, message) => {
         //A linha abaixo estabelece a conexão com o banco
         dbcon = await dbConnect()
+        event.reply('db-message', "conectado")
     })
 
+    app.on('before-quit', async () => {
+        await desconectar (dbcon)
+    })
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
@@ -214,3 +220,36 @@ const template = [
         ]
     }
 ]
+
+//CRUD Create >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//Recebimento dos dados do formulário
+ipcMain.on('new-client', async(event, cliente) => {
+    //Teste de recebimento dos dados
+    console.log(cliente)
+
+    //Passo 3 - slide (cadastrar os dados no banco de dados)
+    try {
+        //Criar um novo objeto usando a classe modelo
+        const novoCliente = new clienteModel({
+            nomeCliente: cliente.nomeCli,
+            foneCliente: cliente.foneCli,
+            emailCliente: cliente.emailCli
+        })
+        //A linha abaixo usa a biblioteca moongoose para salvar
+        await novoCliente.save()
+
+        //Confirmação de cliente adicionado no banco
+        dialog.showMessageBox({
+            type: 'info', 
+            title: 'Aviso',
+            message: 'Cliente adicionado com sucesso',
+            buttons: ["ok"]
+        })
+
+        //Enviar uma resposta para o renderizador resetar o form
+        event.reply('reset-form')
+
+    } catch (error) {
+        console.log(error)
+    }
+})
