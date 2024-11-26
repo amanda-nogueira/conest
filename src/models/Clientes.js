@@ -17,4 +17,5 @@ const clienteSchema = new Schema({
     }
 })
 
+//Para modificar o nome da coleção ("tabela"), basta modificar na linha abaixo o rótulo 'Clientes", sempre iniciando com letra maiúscula.
 module.exports = model('Clientes', clienteSchema) //Exportar para o main

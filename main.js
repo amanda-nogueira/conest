@@ -7,12 +7,17 @@ const {dbConnect, desconectar} = require('./database.js')
 
 /*Status de conexão com o banco. No MongoDB é mais eficiente manter uma única conexão aberta durante todo o tempo de vida do aplicativo
 e usá-la quando necessário. Fechar e reabrir constantemente a conexão aumenta a sobrecarga e reduz o desempenho do servidor.*/
-
 //A variável abaixo é usada para garantir que o banco de dados inicie desconectado (evitar abrir outra instância)
 let dbcon = null
 
 //Importação do Schema Clientes da camada model
 const clienteModel = require('./src/models/Clientes.js')
+
+//Importação do Schema Forncedores da camada model
+const fornecedorModel = require('./src/models/Fornecedores.js')
+
+//Importação do Schema Produtos da camada model
+const produtoModel = require('./src/models/Produtos.js')
 
 let win //Janela principal
 function createWindow() {
@@ -220,9 +225,9 @@ const template = [
         ]
     }
 ]
-
+/************************* Clientes *********************************/
 //CRUD Create >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-//Recebimento dos dados do formulário
+//Recebimento dos dados do formulário do cli
 ipcMain.on('new-client', async(event, cliente) => {
     //Teste de recebimento dos dados
     console.log(cliente)
@@ -243,6 +248,70 @@ ipcMain.on('new-client', async(event, cliente) => {
             type: 'info', 
             title: 'Aviso',
             message: 'Cliente adicionado com sucesso',
+            buttons: ["ok"]
+        })
+
+        //Enviar uma resposta para o renderizador resetar o form
+        event.reply('reset-form')
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+/************************** Fornecedores ********************************/
+ipcMain.on('new-supplier', async(event, fornecedor) => {
+    //Teste de recebimento dos dados
+    console.log(fornecedor)
+
+    //Passo 3 - slide (cadastrar os dados no banco de dados)
+    try {
+        //Criar um novo objeto usando a classe modelo
+        const novoFornecedor = new fornecedorModel({
+            nomeFornecedor: fornecedor.nomeForn,
+            foneFornecedor: fornecedor.foneForn,
+            siteFornecedor: fornecedor.siteForn
+        })
+        //A linha abaixo usa a biblioteca moongoose para salvar
+        await novoFornecedor.save()
+
+        //Confirmação de fornecedor adicionado no banco
+        dialog.showMessageBox({
+            type: 'info', 
+            title: 'Aviso',
+            message: 'Fornecedor adicionado com sucesso',
+            buttons: ["ok"]
+        })
+
+        //Enviar uma resposta para o renderizador resetar o form
+        event.reply('reset-form')
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+/************************* PRODUTO ********************/
+ipcMain.on('new-product', async(event, produto) => {
+    //Teste de recebimento dos dados
+    console.log(produto)
+
+    //Passo 3 - slide (cadastrar os dados no banco de dados)
+    try {
+        //Criar um novo objeto usando a classe modelo
+        const novoProduto = new produtoModel({
+            nomeProduto: produto.nomePro,
+            codProduto: produto.codPro,
+            precoProduto: produto.precoPro
+        })
+        //A linha abaixo usa a biblioteca moongoose para salvar
+        await novoProduto.save()
+
+        //Confirmação de fornecedor adicionado no banco
+        dialog.showMessageBox({
+            type: 'info', 
+            title: 'Aviso',
+            message: 'Produto adicionado com sucesso',
             buttons: ["ok"]
         })
 
