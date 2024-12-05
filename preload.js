@@ -11,7 +11,11 @@ contextBridge.exposeInMainWorld('api', {
     janelaProdutos: () => ipcRenderer.send('open-product'),
     janelaRelatorios: () => ipcRenderer.send('open-report'),
     novoCliente: (cliente) => ipcRenderer.send('new-client', cliente),
+    buscarCliente: (cliNome) => ipcRenderer.send('search-client', cliNome),
     resetarFormulario: (args) => ipcRenderer.on('reset-form', args),
     novoFornecedor: (fornecedor) => ipcRenderer.send('new-supplier', fornecedor),
-    novoProduto: (produto) => ipcRenderer.send('new-product', produto)
+    buscarFornecedor: (fornNome) => ipcRenderer.send('search-supplier', fornNome),
+    novoProduto: (produto) => ipcRenderer.send('new-product', produto),
+    renderizarCliente: (dadosCliente) => ipcRenderer.on('client-data', dadosCliente),
+    renderizarFornecedor: (dadosFornecedor) => ipcRenderer.on('supplier-data', dadosFornecedor)
 })

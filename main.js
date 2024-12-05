@@ -83,7 +83,7 @@ function clientWindow() {
     if (main) {
         client = new BrowserWindow({
             width: 800,
-            height: 600,
+            height: 710,
             //autoHideMenuBar: true,
             parent: main,
             modal: true,
@@ -102,7 +102,7 @@ function supplierWindow() {
     if (main) {
         supplier = new BrowserWindow({
             width: 800,
-            height: 600,
+            height: 710,
             autoHideMenuBar: true,
             parent: main,
             modal: true,
@@ -259,6 +259,26 @@ ipcMain.on('new-client', async(event, cliente) => {
     }
 })
 
+//------------------------CRUD READ-------------------------->
+ipcMain.on('search-client', async (event, cliNome) => {
+    //Teste de recebimento do nome do cliente a ser pesquisado
+    console.log(cliNome)
+    //Passo 3 e 4 - Pesquisar no banco de dados
+    //Find() - Buscar no banco de dados (mongoose)
+    //RegExp - Filtro pelo nome do cliente 'i' insensitive(maiscúlo ou minúsculo)
+    try {
+        const dadosCliente = await clienteModel.find({
+            //nomeCliente vem do model | cliNome vem do renderizador
+            nomeCliente: new RegExp(cliNome, 'i')
+        })
+        console.log(dadosCliente) //Teste passo 3 e 4
+        //PASSO 5 (slide) Enviar os dados do cliente para o renderizador | para converter JSON.stringify
+        event.reply('client-data', JSON.stringify(dadosCliente))
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 /************************** Fornecedores ********************************/
 ipcMain.on('new-supplier', async(event, fornecedor) => {
     //Teste de recebimento dos dados
@@ -291,6 +311,25 @@ ipcMain.on('new-supplier', async(event, fornecedor) => {
     }
 })
 
+//------------------------CRUD READ-------------------------->
+ipcMain.on('search-supplier', async (event, fornNome) => {
+    //Teste de recebimento do nome do fornecedor a ser pesquisado
+    console.log(fornNome)
+    //Passo 3 e 4 - Pesquisar no banco de dados
+    //Find() - Buscar no banco de dados (mongoose)
+    //RegExp - Filtro pelo nome do fornecedor 'i' insensitive(maiscúlo ou minúsculo)
+    try {
+        const dadosFornecedor = await fornecedorModel.find({
+            //nomeCliente vem do model | cliNome vem do renderizador
+            nomeFornecedor: new RegExp(fornNome, 'i')
+        })
+        console.log(dadosFornecedor) //Teste passo 3 e 4
+        //PASSO 5 (slide) Enviar os dados do fornecedor para o renderizador | para converter JSON.stringify
+        event.reply('supplier-data', JSON.stringify(dadosFornecedor))
+    } catch (error) {
+        console.log(error)
+    }
+})
 /************************* PRODUTO ********************/
 ipcMain.on('new-product', async(event, produto) => {
     //Teste de recebimento dos dados

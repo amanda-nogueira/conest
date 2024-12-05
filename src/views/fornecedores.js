@@ -1,5 +1,7 @@
 /* Processo de renderização - fornecedores.html */
 
+//Array usado nos métodos para manipulação da estrutura de dados
+let arrayFornecedor = []
 //CRUD Create >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //Passo 1 - Slide (capturar os dados dos inputs do form)
 let formFornecedor = document.getElementById('frmSupplier')
@@ -22,6 +24,37 @@ formFornecedor.addEventListener('submit', async (event) => {
     api.novoFornecedor(fornecedor)
 })
 //Fim CRUD Creat <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+//CRUD READ ------------------------------------------->
+function buscarFornecedor(){
+    //PASSO 1 (slides)
+    let fornNome = document.getElementById('searchSupplier').value
+    console.log(fornNome) //teste 1
+    //PASSO 2
+    api.buscarFornecedor(fornNome)
+    //Passo 5 - Recebimento dos dados
+    api.renderizarFornecedor((event, dadosFornecedor) => {
+        //Teste de recebimento dos dados do fornecedores
+        console.log(dadosFornecedor)
+        
+        //Passo 6 - renderização dos dados do fornecedor no formulário
+        const fornecedorRenderizado = JSON.parse(dadosFornecedor)
+        arrayFornecedor = fornecedorRenderizado
+        console.log(arrayFornecedor) //teste para entendimento da lógica
+        //Percorrer o array de fornecedores, extrair os dados e setar (preencher) os campos do formulário
+        arrayFornecedor.forEach((f) => {
+            document.getElementById('inputNameSupplier').value = c.nomeFornecedor
+            document.getElementById('inputPhoneSupplier').value = c.foneFornecedor
+            document.getElementById('inputSiteSupplier').value = f.siteFornecedor
+            document.getElementById('inputSupplier').value = f._id
+        })
+    })
+}
+
+//<-----------------------------------------------------
+
+
 
 //Reset Form >>>>>>>>>>>>>>>>>>>>>>>>>>
 api.resetarFormulario((args) => {
