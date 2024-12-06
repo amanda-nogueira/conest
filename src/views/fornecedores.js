@@ -8,6 +8,13 @@ let formFornecedor = document.getElementById('frmSupplier')
 let nomeFornecedor = document.getElementById('inputNameSupplier')
 let foneFornecedor = document.getElementById('inputPhoneSupplier')
 let siteFornecedor = document.getElementById('inputSiteSupplier')
+let cepFornecedor = document.getElementById('inputCepSupplier')
+let dddFornecedor = document.getElementById('inputDddSupplier')
+let logradouroFornecedor = document.getElementById('inputLogradouroSupplier')
+let numeroFornecedor = document.getElementById('inputNumeroSupplier')
+let bairroFornecedor = document.getElementById('inputBairroSupplier')
+let cidadeFornecedor = document.getElementById('inputCidadeSupplier')
+let ufFornecedor = document.getElementById('inputUfSupplier')  
 
 //Evento associado ao botão adicionar (quando o botão for pressionado)
 formFornecedor.addEventListener('submit', async (event) => {
@@ -19,7 +26,15 @@ formFornecedor.addEventListener('submit', async (event) => {
     const fornecedor = {
         nomeForn: nomeFornecedor.value,
         foneForn: foneFornecedor.value,
-        siteForn: siteFornecedor.value
+        siteForn: siteFornecedor.value,        
+        cepForn: cepFornecedor.value,
+        dddForn: dddFornecedor.value,
+        logradouroForn: logradouroFornecedor.value,
+        numeroForn: numeroFornecedor.value,
+        bairroForn: bairroFornecedor.value,
+        cidadeForn: cidadeFornecedor.value,
+        ufForn: ufFornecedor.value
+
     }
     api.novoFornecedor(fornecedor)
 })
@@ -44,10 +59,17 @@ function buscarFornecedor(){
         console.log(arrayFornecedor) //teste para entendimento da lógica
         //Percorrer o array de fornecedores, extrair os dados e setar (preencher) os campos do formulário
         arrayFornecedor.forEach((f) => {
-            document.getElementById('inputNameSupplier').value = c.nomeFornecedor
-            document.getElementById('inputPhoneSupplier').value = c.foneFornecedor
+            document.getElementById('inputNameSupplier').value = f.nomeFornecedor
+            document.getElementById('inputPhoneSupplier').value = f.foneFornecedor
             document.getElementById('inputSiteSupplier').value = f.siteFornecedor
             document.getElementById('inputSupplier').value = f._id
+            document.getElementById('inputDddSupplier').value = f.dddFornecedor
+            document.getElementById('inputLogradouroSupplier').value = f.logradouroFornecedor
+            document.getElementById('inputNumeroSupplier').value = f.numeroFornecedor
+            document.getElementById('inputBairroSupplier').value = f.bairroFornecedor
+            document.getElementById('inputCidadeSupplier').value = f.cidadeFornecedor
+            document.getElementById('inputUfSupplier').value = f.ufFornecedor
+            document.getElementById('inputCepSupplier').value = f.cepFornecedor
         })
     })
 }
@@ -61,5 +83,13 @@ api.resetarFormulario((args) => {
     document.getElementById('inputNameSupplier').value = ""
     document.getElementById('inputPhoneSupplier').value = ""
     document.getElementById('inputSiteSupplier').value = ""
+    document.getElementById('inputDddSupplier').value = ''
+    document.getElementById('inputCepSupplier').value = ''
+    document.getElementById('inputLogradouroSupplier').value = ''
+    document.getElementById('inputBairroSupplier').value = ''
+    document.getElementById('inputCidadeSupplier').value = ''
+    document.getElementById('inputNumeroSupplier').value = ''
+    document.getElementById('inputUfSupplier').value = ''
+    document.getElementById('inputComplementoSupplier').value = ''
 })
 //Fim - RESET FORM <<<<<<<<<<<<<<<<<<<<

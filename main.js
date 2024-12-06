@@ -238,7 +238,14 @@ ipcMain.on('new-client', async(event, cliente) => {
         const novoCliente = new clienteModel({
             nomeCliente: cliente.nomeCli,
             foneCliente: cliente.foneCli,
-            emailCliente: cliente.emailCli
+            emailCliente: cliente.emailCli,
+            cepCliente: cliente.cepCli,
+            dddCliente: cliente.dddCli,
+            logradouroCliente: cliente.logradouroCli,
+            numeroCliente: cliente.numeroCli,
+            bairroCliente: cliente.bairroCli,
+            cidadeCliente: cliente.cidadeCli,
+            ufCliente: cliente.ufCli
         })
         //A linha abaixo usa a biblioteca moongoose para salvar
         await novoCliente.save()
@@ -290,7 +297,14 @@ ipcMain.on('new-supplier', async(event, fornecedor) => {
         const novoFornecedor = new fornecedorModel({
             nomeFornecedor: fornecedor.nomeForn,
             foneFornecedor: fornecedor.foneForn,
-            siteFornecedor: fornecedor.siteForn
+            siteFornecedor: fornecedor.siteForn,
+            cepFornecedor: fornecedor.cepForn,
+            dddFornecedor: fornecedor.dddForn,
+            logradouroFornecedor: fornecedor.logradouroForn,
+            numeroFornecedor: fornecedor.numeroForn,
+            bairroFornecedor: fornecedor.bairroForn,
+            cidadeFornecedor: fornecedor.cidadeForn,
+            ufFornecedor: fornecedor.ufForn
         })
         //A linha abaixo usa a biblioteca moongoose para salvar
         await novoFornecedor.save()
@@ -361,3 +375,42 @@ ipcMain.on('new-product', async(event, produto) => {
         console.log(error)
     }
 })
+//------------------------CRUD READ NOME-------------------------->
+ipcMain.on('search-product', async (event, nomePro) => {
+    //Teste de recebimento do nome do fornecedor a ser pesquisado
+    console.log(nomePro)
+    //Passo 3 e 4 - Pesquisar no banco de dados
+    //Find() - Buscar no banco de dados (mongoose)
+    //RegExp - Filtro pelo nome do produto 'i' insensitive(maiscúlo ou minúsculo)
+    try {
+        const dadosProduto = await produtoModel.find({
+            //nomeProduto vem do model | proNome vem do renderizador
+            nomeProduto: new RegExp(nomePro, 'i')
+        })
+        console.log(dadosProduto) //Teste passo 3 e 4
+        //PASSO 5 (slide) Enviar os dados do produto para o renderizador | para converter JSON.stringify
+        event.reply('product-data', JSON.stringify(dadosProduto))
+    } catch (error) {
+        console.log(error)
+    }
+})
+//---------------------------------CRUD READ COD----------------------------------------
+ipcMain.on('search-product', async (event, codPro) => {
+    //Teste de recebimento do nome do fornecedor a ser pesquisado
+    console.log(codPro)
+    //Passo 3 e 4 - Pesquisar no banco de dados
+    //Find() - Buscar no banco de dados (mongoose)
+    //RegExp - Filtro pelo nome do produto 'i' insensitive(maiscúlo ou minúsculo)
+    try {
+        const dadosProduto = await produtoModel.find({
+            //nomeProduto vem do model | proNome vem do renderizador
+            codProduto: new RegExp(codPro, 'i')
+        })
+        console.log(dadosProduto) //Teste passo 3 e 4
+        //PASSO 5 (slide) Enviar os dados do produto para o renderizador | para converter JSON.stringify
+        event.reply('product-data', JSON.stringify(dadosProduto))
+    } catch (error) {
+        console.log(error)
+    }
+})
+//--------------------------------------------------------------------------<
